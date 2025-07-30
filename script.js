@@ -1,13 +1,12 @@
-// Configurazione Firebase (da sostituire con le tue credenziali)
+// Configurazione Firebase
 const firebaseConfig = {
-    // Queste sono credenziali di esempio - dovrai sostituirle con le tue
-    apiKey: "your-api-key",
-    authDomain: "your-project.firebaseapp.com",
-    databaseURL: "https://your-project-default-rtdb.firebaseio.com/",
-    projectId: "your-project",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "your-app-id"
+  apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
+  authDomain: "tabellone-punteggi.firebaseapp.com",
+  projectId: "tabellone-punteggi",
+  storageBucket: "tabellone-punteggi.firebasestorage.app",
+  messagingSenderId: "116153541822",
+  appId: "1:116153541822:web:a0ac664310378aff7beaef",
+  measurementId: "G-7F983TVLWF"
 };
 
 // Variabili globali
