@@ -517,19 +517,24 @@ async function ensurePlayerExists() {
             id: docRef.id,
             ...newPlayer
         });
-    }
+    }  
 }
 
 // Leaderboard
 function updateLeaderboard() {
     // Calcola totali per ogni giocatore
     const playerTotals = players.map(player => {
-        const playerScores = scores[player.id] || {};
-        const total = Object.values(playerScores).reduce((sum, points) => sum + (points || 0), 0);
+        // Trovo l'oggetto corrispondente al giocatore in scores (usando l'id)
+        const scoreObj = scores.find(score => score.id === player.id) || {};
         
+        // Calcolo il totale sommando tutti i punti tranne la chiave "id"
+        const total = Object.keys(scoreObj).reduce((sum, key) => {
+            if (key === 'id') return sum;
+            return sum + (scoreObj[key]?.points || 0);
+        }, 0);
+    
         return {
             ...player,
-            scores: playerScores,
             total: total
         };
     });
@@ -594,15 +599,17 @@ function createPlayerRow(player, position) {
     games.forEach(game => {
         const gameScore = document.createElement('div');
         gameScore.className = 'game-score';
-        const points = player.scores[game.id] || 0;
+    
+        // Qui prendo i punti, controllando se esiste il gioco dentro player.scores
+        const points = scores[player.id]?.[game.id]?.points || 0;
         gameScore.textContent = points;
-        
+    
         // Permetti editing se sei game master o se è il tuo punteggio
         if (isGameMaster || player.email === currentUser.email) {
             gameScore.classList.add('editable');
             gameScore.addEventListener('click', () => openEditModal(game.id, player.id, points, game.name, player.name));
         }
-        
+    
         gamesContainer.appendChild(gameScore);
     });
     
@@ -798,7 +805,7 @@ function updatePointsManagement() {
         games.forEach(game => {
             const gameScore = document.createElement('div');
             gameScore.className = 'game-score editable';
-            const points = scores[player.id]?.[game.id] || 0;
+            const points = scores[player.id]?.[game.id]?.points || 0;
             gameScore.textContent = points;
             total += points;
             
