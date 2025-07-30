@@ -30,8 +30,7 @@ let players = [];
 let scores = {};
 
 // Email del Game Master (da configurare)
-const GAME_MASTER_EMAIL = "gamemaster@example.com"; // Sostituire con l'email del game master
-
+const GAME_MASTER_EMAIL = "lollocapelli@gmail.com";
 // Elementi DOM
 const loginScreen = document.getElementById('loginScreen');
 const mainScreen = document.getElementById('mainScreen');
