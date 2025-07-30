@@ -449,9 +449,15 @@ async function loadData() {
         }));
         
         // Carica punteggi
-        const scoresSnapshot = await database.ref('scores').once('value');
         const scoresData = scoresSnapshot.val() || {};
         scores = scoresData;
+
+        const scoresSnapshot = await database.ref('scores').once('value');
+        const scoresData = scoresSnapshot.val() || {};
+        scores = Object.keys(scoresData).map(key => ({
+            id: key,
+            ...scoresData[key]
+        }));
         
         // Assicurati che l'utente corrente sia nei giocatori
         await ensurePlayerExists();
