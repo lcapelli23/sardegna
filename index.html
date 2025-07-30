@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabellone Punteggi - Gara Sportiva</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-trophy"></i>
+                    Tabellone Punteggi
+                </h1>
+                <p class="subtitle">Gara Sportiva tra Amici</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="addPlayerBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Aggiungi Partecipante
+                </button>
+                <button class="btn btn-secondary" id="resetBtn">
+                    <i class="fas fa-redo"></i>
+                    Reset
+                </button>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="scoreboard" id="scoreboard">
+                <!-- I punteggi verranno inseriti qui dinamicamente -->
+            </div>
+
+            <div class="empty-state" id="emptyState">
+                <div class="empty-state-content">
+                    <i class="fas fa-users"></i>
+                    <h3>Nessun partecipante ancora</h3>
+                    <p>Aggiungi il primo partecipante per iniziare la gara!</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('addPlayerBtn').click()">
+                        <i class="fas fa-user-plus"></i>
+                        Aggiungi Partecipante
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Aggiornato in tempo reale • <span id="lastUpdate">Mai</span></p>
+        </footer>
+    </div>
+
+    <!-- Modal per aggiungere partecipante -->
+    <div class="modal" id="addPlayerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aggiungi Partecipante</h3>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPlayerForm">
+                    <div class="form-group">
+                        <label for="playerName">Nome Partecipante</label>
+                        <input type="text" id="playerName" name="playerName" placeholder="Inserisci il nome..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="initialScore">Punteggio Iniziale (opzionale)</label>
+                        <input type="number" id="initialScore" name="initialScore" value="0" min="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Annulla</button>
+                <button type="submit" form="addPlayerForm" class="btn btn-primary">Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal per modificare punteggio -->
+    <div class="modal" id="editScoreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifica Punteggio</h3>
+                <button class="modal-close" id="closeEditModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editScoreForm">
+                    <div class="form-group">
+                        <label for="editPlayerName">Partecipante</label>
+                        <input type="text" id="editPlayerName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="newScore">Nuovo Punteggio</label>
+                        <input type="number" id="newScore" name="newScore" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="deletePlayerBtn">
+                    <i class="fas fa-trash"></i>
+                    Elimina
+                </button>
+                <button type="button" class="btn btn-secondary" id="cancelEditBtn">Annulla</button>
+                <button type="submit" form="editScoreForm" class="btn btn-primary">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
