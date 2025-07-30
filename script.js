@@ -1005,6 +1005,33 @@ async function savePointsEdit() {
 
 // Ensure Player Exists
 async function ensurePlayerExists() {
+    if (DEMO_MODE) return;
+    
+    if (!currentUser) return;
+    
+    const existingPlayer = players.find(p => p.email === currentUser.email);
+    if (existingPlayer) return;
+    
+    try {
+        const playerData = {
+            name: currentUser.displayName || currentUser.email.split('@')[0],
+            email: currentUser.email,
+            photoURL: currentUser.photoURL || null,
+            joinedAt: firebase.database.ServerValue.TIMESTAMP
+        };
+        
+        const newPlayerRef = await database.ref('players').push(playerData);
+        
+        players.push({
+            id: newPlayerRef.key,
+            ...playerData
+        });
+    } catch (error) {
+        console.error('Errore creazione giocatore:', error);
+    }
+}
+
+function getSportIcon(sport) {
     const icons = {
         'calcio': '<i class="fas fa-futbol"></i>',
         'badminton': '<i class="fas fa-shuttlecock"></i>',
@@ -1043,4 +1070,3 @@ document.addEventListener('keydown', function(e) {
         savePointsEdit();
     }
 });
-
