@@ -455,6 +455,8 @@ async function loadData() {
           id: key,
           ...scoresData[key]
         }));
+
+        console.log("Scores array:", scores);
         
         // Assicurati che l'utente corrente sia nei giocatori
         await ensurePlayerExists();
