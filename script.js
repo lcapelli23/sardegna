@@ -1,12 +1,13 @@
 // Configurazione Firebase
 const firebaseConfig = {
-    // NOTA: Sostituire con la propria configurazione Firebase
-    apiKey: "your-api-key",
-    authDomain: "your-project.firebaseapp.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "your-app-id"
+  apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
+  authDomain: "tabellone-punteggi.firebaseapp.com",
+  databaseURL: "https://tabellone-punteggi-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tabellone-punteggi",
+  storageBucket: "tabellone-punteggi.firebasestorage.app",
+  messagingSenderId: "116153541822",
+  appId: "1:116153541822:web:a0ac664310378aff7beaef",
+  measurementId: "G-7F983TVLWF"
 };
 
 // Inizializzazione Firebase
