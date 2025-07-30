@@ -6,7 +6,8 @@ const firebaseConfig = {
   storageBucket: "tabellone-punteggi.firebasestorage.app",
   messagingSenderId: "116153541822",
   appId: "1:116153541822:web:a0ac664310378aff7beaef",
-  measurementId: "G-7F983TVLWF"
+  measurementId: "G-7F983TVLWF",
+  databaseURL: "https://tabellone-punteggi-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 // Variabili globali
