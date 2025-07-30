@@ -449,7 +449,7 @@ async function loadData() {
         }));
         
         // Carica punteggi
-        const scoresSnapshot = await database.ref('scores').once('value');
+        const scoresSnapshot = await database.ref('scores').once('points');
         const scoresData = scoresSnapshot.val() || {};
         scores = Object.keys(scoresData).map(key => ({
             id: key,
