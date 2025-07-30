@@ -1,0 +1,82 @@
+/* Reset minimal */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: #005f73;
+  color: white;
+  padding: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+}
+
+#firebaseui-auth-container {
+  margin: 2rem auto;
+  max-width: 360px;
+}
+
+.hidden { display: none; }
+
+main#app {
+  flex: 1;
+  padding: 1rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.controls button {
+  background: #0a9396;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: #007f82;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+thead {
+  background: #94d2bd;
+}
+
+@media (max-width: 600px) {
+  .logo h1 { font-size: 1.2rem; }
+  th, td { padding: 0.5rem; font-size: 0.9rem; }
+}
