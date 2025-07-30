@@ -9,14 +9,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <!-- FirebaseUI -->
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
-  <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.js"></script>
 </head>
 <body>
   <header>
     <div class="logo">
-      <!-- Inline SVG icona coppa -->
       <svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
         <path d="M16 8h32v8a16 16 0 0 1-32 0V8z" fill="#f4c542"/>
         <path d="M24 56h16v-8H24v8z" fill="#d4af37"/>
@@ -26,28 +22,56 @@
     </div>
   </header>
 
-  <!-- FirebaseUI Container -->
-  <div id="firebaseui-auth-container"></div>
+  <!-- AUTH FORMS -->
+  <div id="auth-container">
+    <!-- Toggle -->
+    <div class="toggle-forms">
+      <button id="show-login">Login</button>
+      <button id="show-signup">Registrati</button>
+    </div>
 
-  <!-- Dashboard -->
+    <!-- Login Form -->
+    <form id="login-form" class="auth-form">
+      <h2>Login</h2>
+      <label>Username
+        <input type="text" id="login-username" required>
+      </label>
+      <label>Password
+        <input type="password" id="login-password" required>
+      </label>
+      <button type="submit">Entra</button>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signup-form" class="auth-form hidden">
+      <h2>Registrazione</h2>
+      <label>Username
+        <input type="text" id="signup-username" required>
+      </label>
+      <label>Email
+        <input type="email" id="signup-email" required>
+      </label>
+      <label>Password
+        <input type="password" id="signup-password" required>
+      </label>
+      <button type="submit">Registrati</button>
+    </form>
+  </div>
+
+  <!-- DASHBOARD -->
   <main id="app" class="hidden">
     <section class="controls" id="gm-controls">
       <button id="add-race">+ Aggiungi Gara</button>
     </section>
-
     <section class="table-container">
       <table id="scoreboard">
         <thead>
-          <tr>
-            <th>Partecipante</th>
-            <!-- qui verranno inserite le colonne gare dinamicamente -->
-          </tr>
+          <tr><th>Partecipante</th></tr>
         </thead>
-        <tbody>
-          <!-- righe utenti -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </section>
+    <button id="logout">Esci</button>
   </main>
 
   <script src="script.js"></script>
