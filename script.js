@@ -1,4 +1,4 @@
-// ===== 1) Inizializza Firebase =====
+// 1) Firebase init
 const firebaseConfig = {
   apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
   authDomain: "tabellone-punteggi.firebaseapp.com",
@@ -13,62 +13,96 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-// ===== 2) Persistenza dell’autenticazione =====
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .catch(err => console.error("Impossibile impostare persistenza:", err));
+// 2) DOM Elements
+const loginForm   = document.getElementById('login-form');
+const signupForm  = document.getElementById('signup-form');
+const showLogin   = document.getElementById('show-login');
+const showSignup  = document.getElementById('show-signup');
+const authContainer = document.getElementById('auth-container');
+const appEl       = document.getElementById('app');
+const logoutBtn   = document.getElementById('logout');
+const scoreboard  = document.querySelector('#scoreboard tbody');
+const headerRow   = document.querySelector('#scoreboard thead tr');
+const gmControls  = document.getElementById('gm-controls');
 
-// ===== 3) Configura FirebaseUI =====
-const ui = new firebaseui.auth.AuthUI(auth);
-const uiConfig = {
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-  // Disabilita i campi “Nome/Cognome”
-  credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-  callbacks: {
-    signInSuccessWithAuthResult: (authResult) => {
-      // Se è un nuovo utente, creo il suo documento in Firestore
-      if (authResult.additionalUserInfo.isNewUser) {
-        db.collection('users').doc(authResult.user.uid).set({
-          displayName: authResult.user.email,
-          email: authResult.user.email,
-          scores: {}
-        }).catch(e => console.error("Errore creando profilo:", e));
-      }
-      // Ritorno false per NON fare redirect automatico
-      return false;
-    }
+const GM_EMAIL    = 'gamemaster@esempio.com';
+let currentUser, races = [];
+
+// 3) Toggle forms
+showLogin.addEventListener('click', () => {
+  signupForm.classList.add('hidden');
+  loginForm.classList.remove('hidden');
+});
+showSignup.addEventListener('click', () => {
+  loginForm.classList.add('hidden');
+  signupForm.classList.remove('hidden');
+});
+
+// 4) Signup handler
+signupForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const username = document.getElementById('signup-username').value.trim();
+  const email    = document.getElementById('signup-email').value.trim();
+  const pass     = document.getElementById('signup-password').value;
+
+  // Controllo che username non esista già
+  const snap = await db.doc(`usernames/${username}`).get();
+  if (snap.exists) {
+    return alert('Username già utilizzato.');
   }
-};
-ui.start('#firebaseui-auth-container', uiConfig);
 
-// ===== 4) Elementi del DOM =====
-const appEl        = document.getElementById('app');
-const scoreboard   = document.querySelector('#scoreboard tbody');
-const headerRow    = document.querySelector('thead tr');
-const gmControls   = document.getElementById('gm-controls');
-const GM_EMAIL     = 'gamemaster@esempio.com';
-let currentUser    = null;
-let races          = [];
+  // Creo utente
+  const cred = await auth.createUserWithEmailAndPassword(email, pass);
+  const uid  = cred.user.uid;
 
-// ===== 5) Listener stato auth =====
+  // Salvo mapping username→uid e profilo utente
+  await db.doc(`usernames/${username}`).set({ uid });
+  await db.doc(`users/${uid}`).set({
+    username, email, displayName: username,
+    scores: {}
+  });
+
+  // Entra direttamente
+});
+
+// 5) Login handler
+loginForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const username = document.getElementById('login-username').value.trim();
+  const pass     = document.getElementById('login-password').value;
+
+  // Recupero uid da username
+  const snap = await db.doc(`usernames/${username}`).get();
+  if (!snap.exists) return alert('Username non trovato.');
+
+  const { uid } = snap.data();
+  // Recupero email da profilo
+  const userDoc = await db.doc(`users/${uid}`).get();
+  if (!userDoc.exists) return alert('Profilo utente mancante.');
+
+  const { email } = userDoc.data();
+  // Effettuo il login con email/password
+  await auth.signInWithEmailAndPassword(email, pass);
+});
+
+// 6) Logout
+logoutBtn.addEventListener('click', () => auth.signOut());
+
+// 7) Auth state listener
 auth.onAuthStateChanged(user => {
   if (user) {
-    // Utente loggato → mostra l’app, nascondi il login
-    document.getElementById('firebaseui-auth-container').classList.add('hidden');
-    appEl.classList.remove('hidden');
-
     currentUser = user;
+    authContainer.classList.add('hidden');
+    appEl.classList.remove('hidden');
     setupUI(user);
     loadRaces();
   } else {
-    // Utente non loggato → mostra solo il login
     appEl.classList.add('hidden');
-    document.getElementById('firebaseui-auth-container').classList.remove('hidden');
+    authContainer.classList.remove('hidden');
   }
 });
 
-// ===== 6) UI in base al ruolo =====
+// 8) Ruoli e controlli
 function setupUI(user) {
   if (user.email === GM_EMAIL) {
     gmControls.classList.remove('hidden');
@@ -79,62 +113,53 @@ function setupUI(user) {
   }
 }
 
-// ===== 7) Carica e mostra gare =====
+// 9) Carica gare e tabellone
 function loadRaces() {
   db.collection('races').orderBy('created')
     .onSnapshot(snap => {
       races = [];
-      // ricostruisco l’intestazione
       headerRow.innerHTML = '<th>Partecipante</th>';
-      snap.forEach(doc => {
-        races.push({ id: doc.id, name: doc.data().name });
+      snap.forEach(d => {
+        races.push({ id: d.id, name: d.data().name });
         const th = document.createElement('th');
-        th.textContent = doc.data().name;
+        th.textContent = d.data().name;
         headerRow.appendChild(th);
       });
       renderScores();
     });
 }
 
-// ===== 8) Rendering punteggi =====
 function renderScores() {
-  db.collection('users')
-    .onSnapshot(snap => {
-      scoreboard.innerHTML = '';
-      snap.forEach(uDoc => {
-        const data = uDoc.data();
-        const tr = document.createElement('tr');
-        // Nome/Email
-        const nameTd = document.createElement('td');
-        nameTd.textContent = data.displayName || data.email;
-        tr.appendChild(nameTd);
+  db.collection('users').onSnapshot(snap => {
+    scoreboard.innerHTML = '';
+    snap.forEach(uDoc => {
+      const data = uDoc.data();
+      const tr   = document.createElement('tr');
+      const nameTd = document.createElement('td');
+      nameTd.textContent = data.username || data.email;
+      tr.appendChild(nameTd);
 
-        // Una cella per ogni gara
-        races.forEach(r => {
-          const td   = document.createElement('td');
-          const val  = data.scores?.[r.id] || 0;
-          // Se sono io (GM) o è il mio profilo, input editabile
-          if (currentUser.email === GM_EMAIL || currentUser.uid === uDoc.id) {
-            const inp = document.createElement('input');
-            inp.type  = 'number';
-            inp.min   = 0;
-            inp.value = val;
-            inp.addEventListener('change', () => {
-              updateScore(uDoc.id, r.id, parseInt(inp.value));
-            });
-            td.appendChild(inp);
-          } else {
-            td.textContent = val;
-          }
-          tr.appendChild(td);
-        });
-
-        scoreboard.appendChild(tr);
+      races.forEach(r => {
+        const td = document.createElement('td');
+        const val = data.scores?.[r.id] || 0;
+        if (currentUser.email === GM_EMAIL || currentUser.uid === uDoc.id) {
+          const inp = document.createElement('input');
+          inp.type = 'number'; inp.min = 0; inp.value = val;
+          inp.addEventListener('change', () =>
+            updateScore(uDoc.id, r.id, parseInt(inp.value))
+          );
+          td.appendChild(inp);
+        } else {
+          td.textContent = val;
+        }
+        tr.appendChild(td);
       });
+
+      scoreboard.appendChild(tr);
     });
+  });
 }
 
-// ===== 9) Aggiungi gara (solo GM) =====
 function addRacePrompt() {
   const name = prompt('Nome nuova gara:');
   if (!name) return;
@@ -144,12 +169,10 @@ function addRacePrompt() {
   });
 }
 
-// ===== 10) Aggiorna punteggio =====
 function updateScore(userId, raceId, points) {
   const userRef = db.collection('users').doc(userId);
   if (currentUser.email === GM_EMAIL || currentUser.uid === userId) {
-    const field = `scores.${raceId}`;
-    userRef.set({ [field]: points }, { merge: true });
+    userRef.set({ [`scores.${raceId}`]: points }, { merge: true });
   } else {
     alert('Non hai i permessi per questa operazione.');
   }
