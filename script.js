@@ -14,12 +14,31 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Assicuriamoci che l’utente resti loggato anche chiudendo il browser
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .catch(err => console.error("Impossibile impostare persistenza:", err));
+
 // Imposta FirebaseUI per email/password (puoi aggiungere altri provider)
 const ui = new firebaseui.auth.AuthUI(auth);
 const uiConfig = {
-  signInOptions: [ firebase.auth.EmailAuthProvider.PROVIDER_ID ],
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID
+  ],
+  // Disabilita i campi “Nome/Cognome” di default
+  credentialHelper: firebaseui.auth.CredentialHelper.NONE,
   callbacks: {
-    signInSuccessWithAuthResult: () => false
+    signInSuccessWithAuthResult: (authResult) => {
+      // Se è un nuovo utente, creo il suo profilo in Firestore
+      if (authResult.additionalUserInfo.isNewUser) {
+        db.collection('users').doc(authResult.user.uid).set({
+          displayName: authResult.user.displayName || authResult.user.email,
+          email: authResult.user.email,
+          scores: {}
+        }).catch(e => console.error("Errore creando profilo:", e));
+      }
+      // Ritorno false per non fare redirect automatico
+      return false;
+    }
   }
 };
 ui.start('#firebaseui-auth-container', uiConfig);
@@ -38,11 +57,16 @@ let races = []; // lista gare { id, name }
 // Listener auth
 auth.onAuthStateChanged(user => {
   if (user) {
-    currentUser = user;
+    // Utente autenticato → mostro l’app
     document.getElementById('firebaseui-auth-container').classList.add('hidden');
-    appEl.classList.remove('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    currentUser = user;
     setupUI(user);
     loadRaces();
+  } else {
+    // Utente non autenticato → mostro solo il login
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('firebaseui-auth-container').classList.remove('hidden');
   }
 });
 
