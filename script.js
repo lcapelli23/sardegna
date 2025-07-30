@@ -1,4 +1,4 @@
-// Configura qui il tuo progetto Firebase
+// ===== 1) Inizializza Firebase =====
 const firebaseConfig = {
   apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
   authDomain: "tabellone-punteggi.firebaseapp.com",
@@ -9,68 +9,66 @@ const firebaseConfig = {
   appId: "1:116153541822:web:a0ac664310378aff7beaef",
   measurementId: "G-7F983TVLWF"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.firestore();
+const db   = firebase.firestore();
 
-// Assicuriamoci che l’utente resti loggato anche chiudendo il browser
+// ===== 2) Persistenza dell’autenticazione =====
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   .catch(err => console.error("Impossibile impostare persistenza:", err));
 
-// Imposta FirebaseUI per email/password (puoi aggiungere altri provider)
+// ===== 3) Configura FirebaseUI =====
 const ui = new firebaseui.auth.AuthUI(auth);
 const uiConfig = {
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID
   ],
-  // Disabilita i campi “Nome/Cognome” di default
+  // Disabilita i campi “Nome/Cognome”
   credentialHelper: firebaseui.auth.CredentialHelper.NONE,
   callbacks: {
     signInSuccessWithAuthResult: (authResult) => {
-      // Se è un nuovo utente, creo il suo profilo in Firestore
+      // Se è un nuovo utente, creo il suo documento in Firestore
       if (authResult.additionalUserInfo.isNewUser) {
         db.collection('users').doc(authResult.user.uid).set({
-          displayName: authResult.user.displayName || authResult.user.email,
+          displayName: authResult.user.email,
           email: authResult.user.email,
           scores: {}
         }).catch(e => console.error("Errore creando profilo:", e));
       }
-      // Ritorno false per non fare redirect automatico
+      // Ritorno false per NON fare redirect automatico
       return false;
     }
   }
 };
 ui.start('#firebaseui-auth-container', uiConfig);
 
-const appEl = document.getElementById('app');
-const scoreboard = document.getElementById('scoreboard').querySelector('tbody');
-const headerRow = document.querySelector('thead tr');
-const gmControls = document.getElementById('gm-controls');
+// ===== 4) Elementi del DOM =====
+const appEl        = document.getElementById('app');
+const scoreboard   = document.querySelector('#scoreboard tbody');
+const headerRow    = document.querySelector('thead tr');
+const gmControls   = document.getElementById('gm-controls');
+const GM_EMAIL     = 'gamemaster@esempio.com';
+let currentUser    = null;
+let races          = [];
 
-// Utente con email del Game Master
-const GM_EMAIL = 'gamemaster@esempio.com';
-
-let currentUser = null;
-let races = []; // lista gare { id, name }
-
-// Listener auth
+// ===== 5) Listener stato auth =====
 auth.onAuthStateChanged(user => {
   if (user) {
-    // Utente autenticato → mostro l’app
+    // Utente loggato → mostra l’app, nascondi il login
     document.getElementById('firebaseui-auth-container').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
+    appEl.classList.remove('hidden');
+
     currentUser = user;
     setupUI(user);
     loadRaces();
   } else {
-    // Utente non autenticato → mostro solo il login
-    document.getElementById('app').classList.add('hidden');
+    // Utente non loggato → mostra solo il login
+    appEl.classList.add('hidden');
     document.getElementById('firebaseui-auth-container').classList.remove('hidden');
   }
 });
 
-// Mostra/nascondi controlli in base al ruolo
+// ===== 6) UI in base al ruolo =====
 function setupUI(user) {
   if (user.email === GM_EMAIL) {
     gmControls.classList.remove('hidden');
@@ -81,56 +79,62 @@ function setupUI(user) {
   }
 }
 
-// Carica gare e costruisce tabella
+// ===== 7) Carica e mostra gare =====
 function loadRaces() {
-  db.collection('races').orderBy('created').onSnapshot(snap => {
-    races = [];
-    headerRow.innerHTML = '<th>Partecipante</th>';
-    snap.forEach(doc => {
-      races.push({ id: doc.id, name: doc.data().name });
-      const th = document.createElement('th');
-      th.textContent = doc.data().name;
-      headerRow.appendChild(th);
-    });
-    renderScores();
-  });
-}
-
-// Rendering punteggi
-function renderScores() {
-  db.collection('users').onSnapshot(snap => {
-    scoreboard.innerHTML = '';
-    snap.forEach(uDoc => {
-      const userData = uDoc.data();
-      const tr = document.createElement('tr');
-      const nameTd = document.createElement('td');
-      nameTd.textContent = userData.displayName || userData.email;
-      tr.appendChild(nameTd);
-
-      races.forEach(r => {
-        const td = document.createElement('td');
-        const val = userData.scores?.[r.id] || 0;
-        if (currentUser.uid === uDoc.id || currentUser.email === GM_EMAIL) {
-          const inp = document.createElement('input');
-          inp.type = 'number';
-          inp.min = 0;
-          inp.value = val;
-          inp.addEventListener('change', () => {
-            updateScore(uDoc.id, r.id, parseInt(inp.value));
-          });
-          td.appendChild(inp);
-        } else {
-          td.textContent = val;
-        }
-        tr.appendChild(td);
+  db.collection('races').orderBy('created')
+    .onSnapshot(snap => {
+      races = [];
+      // ricostruisco l’intestazione
+      headerRow.innerHTML = '<th>Partecipante</th>';
+      snap.forEach(doc => {
+        races.push({ id: doc.id, name: doc.data().name });
+        const th = document.createElement('th');
+        th.textContent = doc.data().name;
+        headerRow.appendChild(th);
       });
-
-      scoreboard.appendChild(tr);
+      renderScores();
     });
-  });
 }
 
-// Aggiungi gara (GM)
+// ===== 8) Rendering punteggi =====
+function renderScores() {
+  db.collection('users')
+    .onSnapshot(snap => {
+      scoreboard.innerHTML = '';
+      snap.forEach(uDoc => {
+        const data = uDoc.data();
+        const tr = document.createElement('tr');
+        // Nome/Email
+        const nameTd = document.createElement('td');
+        nameTd.textContent = data.displayName || data.email;
+        tr.appendChild(nameTd);
+
+        // Una cella per ogni gara
+        races.forEach(r => {
+          const td   = document.createElement('td');
+          const val  = data.scores?.[r.id] || 0;
+          // Se sono io (GM) o è il mio profilo, input editabile
+          if (currentUser.email === GM_EMAIL || currentUser.uid === uDoc.id) {
+            const inp = document.createElement('input');
+            inp.type  = 'number';
+            inp.min   = 0;
+            inp.value = val;
+            inp.addEventListener('change', () => {
+              updateScore(uDoc.id, r.id, parseInt(inp.value));
+            });
+            td.appendChild(inp);
+          } else {
+            td.textContent = val;
+          }
+          tr.appendChild(td);
+        });
+
+        scoreboard.appendChild(tr);
+      });
+    });
+}
+
+// ===== 9) Aggiungi gara (solo GM) =====
 function addRacePrompt() {
   const name = prompt('Nome nuova gara:');
   if (!name) return;
@@ -140,13 +144,13 @@ function addRacePrompt() {
   });
 }
 
-// Aggiorna punteggio in Firestore
+// ===== 10) Aggiorna punteggio =====
 function updateScore(userId, raceId, points) {
   const userRef = db.collection('users').doc(userId);
-  const field = `scores.${raceId}`;
   if (currentUser.email === GM_EMAIL || currentUser.uid === userId) {
+    const field = `scores.${raceId}`;
     userRef.set({ [field]: points }, { merge: true });
   } else {
-    alert('Non hai i permessi per fare questa operazione.');
+    alert('Non hai i permessi per questa operazione.');
   }
 }
