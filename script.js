@@ -308,22 +308,20 @@ async function registerWithEmail() {
             }, 1000);
         } else {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    
+            await userCredential.user.updateProfile({ displayName: name });
+
             // Esegui logout e login per forzare aggiornamento user
             addNewPlayerToDatabase(name, email);
-            
-            const user = userCredential.user;
-            await user.updateProfile({ displayName: name });
-            await user.reload();
-
-            currentUser = user;
-            currentUser.displayName = name;
     
             // Reset form
             registerName.value = '';
             registerEmail.value = '';
             registerPassword.value = '';
             confirmPassword.value = '';
+
+            // Torna al tab login
+            switchAuthTab('login');
+            hideLoading();
         }
     } catch (error) {
         console.error('Errore registrazione:', error);
