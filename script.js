@@ -286,6 +286,8 @@ async function registerWithEmail() {
                     photoURL: null,
                     uid: 'demo-user-' + Date.now()
                 };
+
+                addNewPlayerToDatabase(name, email)
                 
                 checkGameMasterStatus();
                 showMainScreen();
@@ -296,9 +298,7 @@ async function registerWithEmail() {
                 registerEmail.value = '';
                 registerPassword.value = '';
                 confirmPassword.value = '';
-                
-                // Torna al tab login
-                switchAuthTab('login');
+              
                 hideLoading();
             }, 1000);
         } else {
@@ -1024,7 +1024,29 @@ async function savePointsEdit() {
 }
 
 // Ensure Player Exists
+async function addNewPlayerToDatabase(name, email, photoURL = null) {
+    console.log("ADD");
+    try {
+        const playerData = {
+            name: name,
+            email: email,
+            photoURL: photoURL,
+            joinedAt: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        const newPlayerRef = await database.ref('players').push(playerData);
+
+        players.push({
+            id: newPlayerRef.key,
+            ...playerData
+        });
+    } catch (error) {
+        console.error('Errore nella creazione del player:', error);
+    }
+}
+
 async function ensurePlayerExists() {
+    console.log("ENSURE");
     if (DEMO_MODE) return;
     
     if (!currentUser) return;
@@ -1033,9 +1055,7 @@ async function ensurePlayerExists() {
     if (existingPlayer) return;
     
     try {
-        console.log(currentUser)
         const playerData = {
-            name: currentUser.displayName || currentUser.email.split('@')[0],
             email: currentUser.email,
             photoURL: currentUser.photoURL || null,
             joinedAt: firebase.database.ServerValue.TIMESTAMP
