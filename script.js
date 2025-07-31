@@ -308,11 +308,14 @@ async function registerWithEmail() {
             }, 1000);
         } else {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            await userCredential.user.updateProfile({ displayName: name });
 
             // Esegui logout e login per forzare aggiornamento user
             addNewPlayerToDatabase(name, email);
-    
+            
+            await userCredential.user.updateProfile({ displayName: name });
+            await userCredential.user.reload();  // forza il refresh
+            currentUser = auth.currentUser;      // solo ora è aggiornato
+            
             // Reset form
             registerName.value = '';
             registerEmail.value = '';
