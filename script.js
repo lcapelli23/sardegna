@@ -306,6 +306,7 @@ async function registerWithEmail() {
     
             // Esegui logout e login per forzare aggiornamento user
             addNewPlayerToDatabase(name, email)
+            currentUser.displayName = name;
     
             // Reset form
             registerName.value = '';
@@ -1044,22 +1045,7 @@ async function ensurePlayerExists() {
     const existingPlayer = players.find(p => p.email === currentUser.email);
     if (existingPlayer) return;
     
-    try {
-        const playerData = {
-            email: currentUser.email,
-            photoURL: currentUser.photoURL || null,
-            joinedAt: firebase.database.ServerValue.TIMESTAMP
-        };
-        
-        const newPlayerRef = await database.ref('players').push(playerData);
-        
-        players.push({
-            id: newPlayerRef.key,
-            ...playerData
-        });
-    } catch (error) {
-        console.error('Errore creazione giocatore:', error);
-    }
+    console.error('Errore creazione giocatore:', error);
 }
 
 function getSportIcon(sport) {
