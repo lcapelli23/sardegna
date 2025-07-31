@@ -510,8 +510,7 @@ body {
 
 /* 6. Body della tabella con scroll verticale se necessario */
 .table-body {
-    max-height: 600px; /* Altezza massima prima di mostrare lo scroll verticale */
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 /* 7. Layout a griglia per le righe dei giocatori, speculare all'header */
