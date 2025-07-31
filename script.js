@@ -386,6 +386,7 @@ function showMainScreen() {
     document.body.style.overflow = 'auto';
     
     // Update user info
+  console.log(currentUser.displayName + "2")
     const displayName = currentUser.displayName || currentUser.email.split('@')[0];
     userName.textContent = displayName;
     
@@ -1047,6 +1048,7 @@ async function ensurePlayerExists() {
     if (existingPlayer) return;
     
     try {
+        console.log(currentUser.displayName + "1")
         const playerData = {
             name: currentUser.displayName || currentUser.email.split('@')[0],
             email: currentUser.email,
