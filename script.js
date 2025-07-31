@@ -386,6 +386,7 @@ function showMainScreen() {
     document.body.style.overflow = 'auto';
     
     // Update user info
+    console.log(currentUser.displayName);
     const displayName = currentUser.displayName || currentUser.email.split('@')[0];
     userName.textContent = displayName;
     
@@ -455,8 +456,6 @@ async function loadData() {
           id: key,
           ...scoresData[key]
         }));
-
-        console.log("Scores array:", scores);
         
         // Assicurati che l'utente corrente sia nei giocatori
         await ensurePlayerExists();
