@@ -286,8 +286,6 @@ async function registerWithEmail() {
                     photoURL: null,
                     uid: 'demo-user-' + Date.now()
                 };
-
-                addNewPlayerToDatabase(name, email)
                 
                 checkGameMasterStatus();
                 showMainScreen();
@@ -298,14 +296,13 @@ async function registerWithEmail() {
                 registerEmail.value = '';
                 registerPassword.value = '';
                 confirmPassword.value = '';
+                
+                // Torna al tab login
+                switchAuthTab('login');
+                hideLoading();
             }, 1000);
-        } else 
-            showLoading();
-
+        } else {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    
-            // Aggiorna il profilo
-            await userCredential.user.updateProfile({ displayName: name });
     
             // Esegui logout e login per forzare aggiornamento user
             addNewPlayerToDatabase(name, email)
@@ -316,7 +313,6 @@ async function registerWithEmail() {
             registerPassword.value = '';
             confirmPassword.value = '';
         }
-        
     } catch (error) {
         console.error('Errore registrazione:', error);
         let message = 'Errore durante la registrazione. ';
