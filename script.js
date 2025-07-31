@@ -793,7 +793,7 @@ function updatePointsManagement() {
         const playerCell = document.createElement('div');
         playerCell.className = 'player-cell player-info';
         playerCell.innerHTML = `
-            <img src="${player.photoURL || 'https://via.placeholder.com/35'}" alt="${player.name}" class="player-avatar">
+            <img src="${player.photoURL || 'https://placehold.co/35x35'}" alt="${player.name}" class="player-avatar">
             <span class="player-name">${player.name}</span>
         `;
         
