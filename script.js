@@ -1090,21 +1090,20 @@ function getSportName(sport) {
 function createAvatarWithInitials(name, photoURL = null) {
     const avatar = document.createElement('div');
     avatar.className = 'player-avatar';
-    
+
     if (photoURL && photoURL !== 'https://placehold.co/35x35') {
         const img = document.createElement('img');
         img.src = photoURL;
         img.alt = name;
-        img.onerror = function() {
-            // Se l'immagine non si carica, mostra le iniziali
-            avatar.innerHTML = getInitials(name);
+        img.onerror = function () {
+            avatar.innerHTML = ''; // rimuove l'immagine
+            avatar.textContent = getInitials(name);
         };
         avatar.appendChild(img);
     } else {
-        // Mostra le iniziali
         avatar.textContent = getInitials(name);
     }
-    
+
     return avatar;
 }
 
