@@ -522,21 +522,29 @@ body {
     height: 35px;
     border-radius: 50%;
     border: 2px solid white;
-    background-color: #f0f0f0; /* fallback */
+    background-color: #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    user-select: none;
-    overflow: hidden;
     position: relative;
-    color: transparent;
-    background-clip: text;
+    overflow: hidden;
+    font-family: sans-serif;
+    margin: 10px;
+}
+
+.player-avatar::before {
+    content: attr(data-initials);
+    position: absolute;
+    z-index: 1;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ff6ec4, #7873f5);
     -webkit-background-clip: text;
-    background-image: linear-gradient(135deg, #ff6ec4, #7873f5); /* il gradiente delle lettere */
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    pointer-events: none;
 }
 
 .player-name {
