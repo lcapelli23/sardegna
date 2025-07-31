@@ -90,7 +90,7 @@ body {
 }
 
 .screen.active {
-    display: block !important;
+    display: flex !important;
     opacity: 1;
 }
 
