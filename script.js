@@ -308,8 +308,6 @@ async function registerWithEmail() {
                 hideLoading();
             }, 1000);
         } else {
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-
             // 1. Crea l'utente
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
             const user = userCredential.user;
