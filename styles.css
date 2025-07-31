@@ -522,6 +522,16 @@ body {
     height: 35px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
+    background-color: var(--avatar-bg, #ccc); /* fallback se la variabile non è definita */
+    color: var(--avatar-text-color, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-family: sans-serif;
+    user-select: none;
 }
 
 .player-name {
