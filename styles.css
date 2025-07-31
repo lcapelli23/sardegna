@@ -90,8 +90,16 @@ body {
 }
 
 .screen.active {
+    display: block !important;
+    opacity: 1;
+}
+
+/* Solo gli screen centrati (es: login) usano flex */
+.screen.centered.active {
     display: flex !important;
     opacity: 1;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Login Screen */
