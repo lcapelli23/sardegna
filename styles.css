@@ -521,17 +521,22 @@ body {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    border: 2px solid var(--border-color);
-    background-color: var(--avatar-bg, #ccc); /* fallback se la variabile non è definita */
-    color: var(--avatar-text-color, #fff);
+    border: 2px solid white;
+    background-color: #f0f0f0; /* fallback */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 0.85rem;
+    font-weight: 700;
+    font-size: 0.75rem;
     text-transform: uppercase;
     font-family: sans-serif;
     user-select: none;
+    overflow: hidden;
+    position: relative;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-image: linear-gradient(135deg, #ff6ec4, #7873f5); /* il gradiente delle lettere */
 }
 
 .player-name {
