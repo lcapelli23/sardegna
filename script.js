@@ -1,6 +1,7 @@
 // Configurazione Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
+  //apiKey: "your-api-key",
   authDomain: "tabellone-punteggi.firebaseapp.com",
   databaseURL: "https://tabellone-punteggi-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "tabellone-punteggi",
@@ -309,22 +310,38 @@ async function registerWithEmail() {
         } else {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
 
-            // Esegui logout e login per forzare aggiornamento user
-            addNewPlayerToDatabase(name, email);
-            
-            await userCredential.user.updateProfile({ displayName: name });
-            await userCredential.user.reload();  // forza il refresh
-            currentUser = auth.currentUser;      // solo ora è aggiornato
-            
+            // 1. Crea l'utente
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            // 2. AGGIORNA il profilo e ATTENDI il completamento
+            await user.updateProfile({
+                displayName: name
+            });
+
+            // 3. (Opzionale ma consigliato) Ricarica l'oggetto utente per essere sicuro al 100%
+            // che l'oggetto locale `currentUser` sia sincronizzato.
+            await user.reload();
+            currentUser = auth.currentUser; // Riassegna l'utente corrente aggiornato
+
+            // 4. Aggiungi il giocatore al tuo database Realtime
+            // Questa funzione ora può usare `currentUser.displayName` con la certezza che sia corretto.
+            await addNewPlayerToDatabase(currentUser.uid, name, email);
+
+            // A questo punto, `currentUser.displayName` è GARANTITO che contenga il nome corretto.
+            // Le funzioni che seguono funzioneranno come previsto.
+
+            // --- FINE MODIFICHE CHIAVE ---
+
             // Reset form
             registerName.value = '';
             registerEmail.value = '';
             registerPassword.value = '';
             confirmPassword.value = '';
 
-            // Torna al tab login
+            // Torna al tab login e nascondi il caricamento
             switchAuthTab('login');
-            hideLoading();
+            hideLoading(); // Nascondiamo qui perché il login non avviene in automatico
         }
     } catch (error) {
         console.error('Errore registrazione:', error);
@@ -1065,24 +1082,24 @@ async function savePointsEdit() {
 }
 
 // Ensure Player Exists
-async function addNewPlayerToDatabase(name, email, photoURL = null) {
-    console.log("ADD");
+async function addNewPlayerToDatabase(userId, name, email) {
+    console.log("Aggiunta nuovo giocatore al database...");
     try {
         const playerData = {
             name: name,
             email: email,
-            photoURL: photoURL,
             joinedAt: firebase.database.ServerValue.TIMESTAMP
         };
 
-        const newPlayerRef = await database.ref('players').push(playerData);
+        // Usa l'ID utente di Firebase come chiave nel tuo nodo 'players'
+        // Questo crea un collegamento diretto e robusto.
+        await database.ref('players/' + userId).set(playerData);
 
-        players.push({
-            id: newPlayerRef.key,
-            ...playerData
-        });
+        // Non è più necessario fare il push nell'array locale 'players'
+        // perché il listener in tempo reale rileverà il nuovo utente e aggiornerà l'array automaticamente.
+
     } catch (error) {
-        console.error('Errore nella creazione del player:', error);
+        console.error('Errore nella creazione del player nel database:', error);
     }
 }
 
