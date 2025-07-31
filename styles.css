@@ -487,6 +487,8 @@ body {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     box-sizing: border-box;
     white-space: normal; /* Permette al testo di andare a capo */
+    word-wrap: break-word; /* Per browser più vecchi */
+    overflow-wrap: break-word; /* Standard moderno */
 }
 
 /* 6. Body della tabella con scroll verticale se necessario */
