@@ -302,23 +302,23 @@ async function registerWithEmail() {
                 hideLoading();
             }, 1000);
         } else {
+            showLoading();
+
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            
-            // Aggiorna il profilo con il nome
-            await userCredential.user.updateProfile({
-                displayName: name
-            });
-          
-            // ⚠️ refresh necessario
-            await userCredential.user.reload();
-            currentUser = auth.currentUser; // aggiorna la variabile globale
-            
+    
+            // Aggiorna il profilo
+            await userCredential.user.updateProfile({ displayName: name });
+    
+            // Esegui logout e login per forzare aggiornamento user
+            await auth.signOut();
+            await auth.signInWithEmailAndPassword(email, password);
+    
             // Reset form
             registerName.value = '';
             registerEmail.value = '';
             registerPassword.value = '';
             confirmPassword.value = '';
-            
+    
             // Torna al tab login
             switchAuthTab('login');
         }
