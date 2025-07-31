@@ -315,7 +315,8 @@ async function registerWithEmail() {
             const user = userCredential.user;
             await user.updateProfile({ displayName: name });
             await user.reload();
-            currentUser = auth.currentUser;
+            
+            console.log(user);
     
             // Reset form
             registerName.value = '';
