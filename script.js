@@ -308,6 +308,10 @@ async function registerWithEmail() {
             await userCredential.user.updateProfile({
                 displayName: name
             });
+          
+            // ⚠️ refresh necessario
+            await userCredential.user.reload();
+            currentUser = auth.currentUser; // aggiorna la variabile globale
             
             // Reset form
             registerName.value = '';
@@ -497,25 +501,6 @@ function loadDemoData() {
     updateUserGames();
     updateAdminPanel();
     updateStats();
-}
-
-async function ensurePlayerExists() {
-    const existingPlayer = players.find(p => p.email === currentUser.email);
-    
-    if (!existingPlayer) {
-        const newPlayer = {
-            email: currentUser.email,
-            name: currentUser.displayName || 'Utente',
-            photoURL: currentUser.photoURL || '',
-            joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        const docRef = await db.collection('players').add(newPlayer);
-        players.push({
-            id: docRef.id,
-            ...newPlayer
-        });
-    }  
 }
 
 // Leaderboard
