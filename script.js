@@ -546,6 +546,7 @@ function updateLeaderboard() {
     // Aggiorna righe giocatori
     leaderboardBody.innerHTML = '';
     playerTotals.forEach((player, index) => {
+        console.log(player)
         const row = createPlayerRow(player, index + 1);
         leaderboardBody.appendChild(row);
     });
