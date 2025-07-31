@@ -311,7 +311,8 @@ async function registerWithEmail() {
     
             // Esegui logout e login per forzare aggiornamento user
             addNewPlayerToDatabase(name, email);
-          
+            
+            const user = userCredential.user;
             await user.updateProfile({ displayName: name });
             await user.reload();
             currentUser = auth.currentUser;
