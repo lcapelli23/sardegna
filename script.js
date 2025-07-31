@@ -601,7 +601,8 @@ function createPlayerRow(player, position) {
         gameScore.className = 'game-score';
     
         // Qui prendo i punti, controllando se esiste il gioco dentro player.scores
-        const points = player.scores?.[game.id]?.points || 0;
+        const scoreObj = scores.find(score => score.id === player.id) || {};
+        const points = scoreObj[game.id]?.points || 0;
         gameScore.textContent = points;
     
         // Permetti editing se sei game master o se è il tuo punteggio
@@ -675,7 +676,8 @@ function createGameCard(game, player) {
     
     const currentPoints = document.createElement('div');
     currentPoints.className = 'current-points';
-    const points = player.scores?.[game.id]?.points || 0;
+    const scoreObj = scores.find(score => score.id === player.id) || {};
+    const points = scoreObj[game.id]?.points || 0;
     currentPoints.textContent = `${points} punti`;
     
     const editBtn = document.createElement('button');
