@@ -95,23 +95,37 @@ body {
 
 /* Login Screen */
 #loginScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    /* display: flex è il modo migliore per centrare */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra orizzontalmente */
+    
+    /* Impostiamo un'altezza minima pari a quella della viewport */
+    min-height: 100vh; 
+    
+    /* Aggiungiamo un po' di padding per non far attaccare il box ai bordi */
+    padding: 40px 20px;
+    
+    /* Rimuoviamo position: fixed per permettere lo scroll naturale */
+    position: relative; 
+    width: 100%;
+    
+    /* Le proprietà z-index, opacity e transition rimangono utili */
     z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-    #loginScreen.hidden {
-        display: none !important;
-        pointer-events: none !important;
-    }
+/* Queste regole non cambiano, ma sono importanti per il funzionamento */
+#loginScreen.active {
+    display: flex !important; /* Usiamo flex anche qui per coerenza */
+    opacity: 1;
+}
+
+#loginScreen.hidden {
+    display: none !important;
+    pointer-events: none !important;
+}
 
 .login-container {
     position: relative;
@@ -124,6 +138,9 @@ body {
     width: 100%;
     box-shadow: var(--shadow-lg);
     text-align: center;
+    
+    /* Aggiungiamo un margine per dare spazio quando si scrolla */
+    margin: 20px 0; 
 }
 
 .login-header {
