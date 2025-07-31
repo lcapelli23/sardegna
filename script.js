@@ -521,10 +521,25 @@ function updateLeaderboard() {
     
     // Aggiorna righe giocatori
     leaderboardBody.innerHTML = '';
+    
+    let lastPoints = null;
+    let lastPosition = 0;
+    let skip = 0;
+    
     playerTotals.forEach((player, index) => {
-        console.log(player)
-        const row = createPlayerRow(player, index + 1);
+        if (player.total === lastPoints) {
+            // Pareggio → stessa posizione
+            skip++;
+        } else {
+            // Nuovo punteggio → avanza posizione contando anche i pareggi precedenti
+            lastPosition = lastPosition + 1 + skip;
+            skip = 0;
+        }
+    
+        const row = createPlayerRow(player, lastPosition);
         leaderboardBody.appendChild(row);
+    
+        lastPoints = player.total;
     });
 }
 
