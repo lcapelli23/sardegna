@@ -268,7 +268,12 @@ async function registerWithEmail() {
         alert('Le password non coincidono');
         return;
     }
-    
+
+    if (name.length < 4) {
+        alert('Il nome deve avere almeno 4 caratteri');
+        return;
+    }
+  
     if (password.length < 6) {
         alert('La password deve essere di almeno 6 caratteri');
         return;
@@ -305,8 +310,11 @@ async function registerWithEmail() {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
     
             // Esegui logout e login per forzare aggiornamento user
-            addNewPlayerToDatabase(name, email)
-            currentUser.displayName = name;
+            //addNewPlayerToDatabase(name, email);
+          
+            await user.updateProfile({ displayName: name });
+            await user.reload();
+            currentUser = auth.currentUser;
     
             // Reset form
             registerName.value = '';
