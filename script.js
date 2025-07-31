@@ -317,6 +317,7 @@ async function registerWithEmail() {
             await user.reload();
 
             currentUser = user;
+            currentUser.displayName = name;
     
             // Reset form
             registerName.value = '';
