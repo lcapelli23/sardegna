@@ -1108,12 +1108,15 @@ function createAvatarWithInitials(name, photoURL = null) {
 }
 
 function getInitials(name) {
-    return name
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .substring(0, 2)
-        .toUpperCase();
+    const words = name.trim().split(/\s+/); // rimuove spazi in eccesso e divide su 1+ spazi
+    if (words.length === 1) {
+        const firstWord = words[0];
+        return firstWord.slice(0, 2).toUpperCase();
+    } else {
+        const firstInitial = words[0].charAt(0);
+        const lastInitial = words[words.length - 1].charAt(0);
+        return (firstInitial + lastInitial).toUpperCase();
+    }
 }
 
 function updateStats() {
