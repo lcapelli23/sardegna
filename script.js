@@ -310,7 +310,7 @@ async function registerWithEmail() {
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
     
             // Esegui logout e login per forzare aggiornamento user
-            //addNewPlayerToDatabase(name, email);
+            addNewPlayerToDatabase(name, email);
           
             await user.updateProfile({ displayName: name });
             await user.reload();
