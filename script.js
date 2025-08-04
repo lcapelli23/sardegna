@@ -549,7 +549,7 @@ function updateLeaderboard() {
     // Calcola totali per ogni giocatore
     const playerTotals = players.map(player => {
         // Trovo l'oggetto corrispondente al giocatore in scores (usando l'id)
-        const scoreObj = scores.find(score => score.id === player.id) || {};
+        const scoreObj = scores[player.id] || {};
         
         // Calcolo il totale sommando tutti i punti tranne la chiave "id"
         const total = Object.keys(scoreObj).reduce((sum, key) => {
