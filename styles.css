@@ -695,7 +695,8 @@ body {
 
 /* Admin Sections */
 .admin-sections {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 30px;
 }
 
