@@ -1,0 +1,1442 @@
+/* Reset e variabili CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #1e40af;
+    --secondary-color: #f59e0b;
+    --accent-color: #10b981;
+    --background-color: #f8fafc;
+    --surface-color: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9)), url('assets/hero_background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Utility Classes */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+.btn-secondary {
+    background: var(--surface-color);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+    .btn-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+/* Screen Management */
+.screen {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+    .screen.active {
+        display: block !important;
+        opacity: 1;
+    }
+
+/* Login Screen */
+#loginScreen {
+    /* display: flex è il modo migliore per centrare */
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra orizzontalmente */
+    
+    /* Impostiamo un'altezza minima pari a quella della viewport */
+    min-height: 100vh; 
+    
+    /* Aggiungiamo un po' di padding per non far attaccare il box ai bordi */
+    padding: 40px 20px;
+    
+    /* Rimuoviamo position: fixed per permettere lo scroll naturale */
+    position: relative; 
+    width: 100%;
+    
+    /* Le proprietà z-index, opacity e transition rimangono utili */
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Queste regole non cambiano, ma sono importanti per il funzionamento */
+#loginScreen.active {
+    display: flex !important; /* Usiamo flex anche qui per coerenza */
+    opacity: 1;
+}
+
+#loginScreen.hidden {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.login-container {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    
+    /* Aggiungiamo un margine per dare spazio quando si scrolla */
+    margin: 20px 0; 
+}
+
+.login-header {
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.login-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.login-header .subtitle {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.sports-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+    .sports-icons i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        opacity: 0.7;
+        transition: var(--transition);
+    }
+
+        .sports-icons i:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+.login-form h2 {
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--surface-color);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+    .auth-tab.active {
+        background: var(--primary-color);
+        color: white;
+    }
+
+.auth-form {
+    display: none;
+}
+
+    .auth-form.active {
+        display: block;
+    }
+
+    .auth-form .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+        .auth-form .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .auth-form .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+            .auth-form .form-group input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            }
+
+    .auth-form .btn-primary {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+.login-info {
+    padding: 16px;
+    background: #f0f9ff;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+    .login-info p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--primary-color);
+    }
+
+/* Header */
+.header {
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.title-section h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.edition {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    /* Proprietà chiave per centrare le iniziali */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Stile del testo */
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    text-transform: uppercase;
+    /* Sfondo gradiente per l'avatar */
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+.user-role {
+    background: var(--secondary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Navigation */
+.navigation {
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 0;
+}
+
+.nav-tab {
+    background: none;
+    border: none;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+    .nav-tab:hover {
+        color: var(--primary-color);
+        background: #f8fafc;
+    }
+
+    .nav-tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        background: #f8fafc;
+    }
+
+/* Main Content */
+.main-content {
+    padding: 40px 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+    .tab-content.active {
+        display: block;
+    }
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+    .section-header h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+.stats-summary {
+    display: flex;
+    gap: 30px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* --- INIZIO MODIFICHE LEADERBOARD --- */
+
+/* 1. Contenitore principale della leaderboard */
+.leaderboard-container {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden; /* Nasconde lo scroll verticale */
+}
+
+/* 2. Abilita lo scroll orizzontale sulla tabella */
+.leaderboard-table {
+    width: 100%;
+    overflow-x: auto; /* Permette lo scroll solo sull'asse X */
+    -webkit-overflow-scrolling: touch; /* Migliora lo scroll su mobile */
+}
+
+/* 3. Struttura dell'header e del body */
+.table-header, .table-body {
+    min-width: max-content; /* Assicura che il contenitore si espanda per contenere tutte le colonne */
+}
+
+/* 4. Layout a griglia per l'header */
+.table-header {
+    display: grid;
+    /* Colonne: Posizione, Giocatore (flessibile), Gare (contenuto dinamico), Totale */
+    grid-template-columns: 60px minmax(200px, 1fr) auto 100px;
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    color: white;
+    font-weight: 600;
+    position: sticky; /* Fissa l'header durante lo scroll verticale del body (se presente) */
+    top: 0;
+    z-index: 10;
+}
+
+.header-cell {
+    padding: 16px 12px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+    .header-cell:last-child {
+        border-right: none;
+    }
+
+    .header-cell.player {
+        text-align: left;
+    }
+
+/* 5. Contenitore delle colonne dei giochi */
+.games-header {
+    display: flex; /* Allinea le colonne dei giochi in orizzontale */
+    gap: 1px;
+}
+
+.game-column {
+    width: 100px; /* Larghezza fissa per ogni colonna gioco */
+    padding: 16px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 0.85rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+    white-space: normal; /* Permette al testo di andare a capo */
+    word-wrap: break-word; /* Per browser più vecchi */
+    overflow-wrap: break-word; /* Standard moderno */
+}
+
+/* 6. Body della tabella con scroll verticale se necessario */
+.table-body {
+    overflow-y: hidden;
+}
+
+/* 7. Layout a griglia per le righe dei giocatori, speculare all'header */
+.player-row {
+    display: grid;
+    grid-template-columns: 60px minmax(200px, 1fr) auto 100px;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+    .player-row:hover {
+        background: #f8fafc;
+    }
+
+.player-cell {
+    padding: 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .player-cell.player-info {
+        justify-content: flex-start;
+        gap: 12px;
+    }
+
+.position-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+}
+
+.position-1 {
+    background: #ffd700;
+}
+
+.position-2 {
+    background: #c0c0c0;
+}
+
+.position-3 {
+    background: #cd7f32;
+}
+
+.position-other {
+    background: var(--text-secondary);
+}
+
+.player-avatar {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: linear-gradient(135deg, #ff6ec4, #7873f5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.player-name {
+    font-weight: 500;
+}
+
+/* 8. Contenitore dei punteggi per ogni giocatore */
+.player-games {
+    display: flex;
+    gap: 1px;
+}
+
+.game-score {
+    width: 100px; /* Stessa larghezza delle colonne nell'header */
+    padding: 16px 8px;
+    text-align: center;
+    background: #f8fafc;
+    border-right: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+    .game-score:hover {
+        background: #e5e7eb;
+    }
+
+    .game-score.editable {
+        background: #fef3c7;
+    }
+
+.total-score {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* --- FINE MODIFICHE LEADERBOARD --- */
+
+
+/* Games Grid */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+    .game-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.sport-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.game-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.game-sport {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.points-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.current-points {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.edit-points-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* Admin Sections */
+.admin-sections {
+    display: grid;
+    gap: 30px;
+}
+
+.admin-section {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+}
+
+    .admin-section h3 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+        font-size: 1.3rem;
+    }
+
+.admin-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .form-group label {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 12px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        transition: var(--transition);
+    }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+.games-list {
+    display: grid;
+    gap: 12px;
+}
+
+.admin-game-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.game-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.game-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.85rem;
+}
+
+    .btn-danger:hover {
+        background: #dc2626;
+    }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+    .modal.active {
+        display: flex;
+    }
+
+.modal-content {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Loading */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+.loading-spinner {
+    text-align: center;
+}
+
+    .loading-spinner i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 16px;
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .user-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-tab {
+        white-space: nowrap;
+        min-width: 120px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .stats-summary {
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .admin-form {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .login-container {
+        padding: 20px;
+        margin: 10px;
+        max-height: 90vh;
+        overflow-y: auto;
+        width: calc(100% - 20px);
+        max-width: 400px;
+    }
+
+    .login-header h1 {
+        font-size: 2rem;
+    }
+
+    .login-header .subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .sports-icons {
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+        .sports-icons i {
+            font-size: 1.5rem;
+        }
+
+    .auth-form {
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group input {
+            padding: 12px;
+            font-size: 16px; /* Previene zoom su iOS */
+        }
+}
+
+@media (max-width: 480px) {
+    .login-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .title-section h1 {
+        font-size: 1.2rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .nav-tab {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+
+    .game-card {
+        padding: 20px;
+    }
+
+    .modal-content {
+        margin: 20px;
+    }
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content.active {
+    animation: fadeIn 0.3s ease;
+}
+
+.game-card,
+.admin-section {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Utility per nascondere elementi admin */
+.admin-only {
+    display: none;
+}
+
+    .admin-only.show {
+        display: block;
+    }
+
+.nav-tab.admin-only.show {
+    display: flex;
+}
+
+
+/* === NUOVI STILI PER LE MODIFICHE === */
+
+/* Correzione sfondo bianco su mobile */
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100%;
+    /* Previene il bounce scroll su iOS */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    /* Assicura che il gradiente copra sempre tutto lo schermo */
+    background-attachment: fixed;
+}
+
+/* Correzione per iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+        /* Su iOS, fixed non funziona bene, usiamo scroll */
+        background-attachment: scroll;
+        /* Assicuriamo che il background copra sempre l'intera viewport */
+        background-size: 100% 100vh;
+        background-repeat: no-repeat;
+    }
+}
+
+/* Risultati per Sport */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sport-results {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.sport-header {
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sport-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.sport-icon-large {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+.sport-games-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sport-games-table th,
+.sport-games-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sport-games-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sport-games-table td {
+    color: var(--text-secondary);
+}
+
+.sport-games-table tr:hover {
+    background: #f8fafc;
+}
+
+.game-name-cell {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.player-score-cell {
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.no-games-message {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Form Admin Migliorato */
+.admin-form-improved {
+    margin-bottom: 30px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-large {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Miglioramenti per la classifica - editing solo per Game Master */
+.game-score.admin-editable {
+    background: #fef3c7;
+    cursor: pointer;
+}
+
+.game-score.admin-editable:hover {
+    background: #fde68a;
+}
+
+.game-score.non-editable {
+    cursor: default;
+    background: #f8fafc;
+}
+
+.game-score.non-editable:hover {
+    background: #f8fafc;
+}
+
+/* Responsive per i nuovi elementi */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .sport-games-table {
+        font-size: 0.9rem;
+    }
+    
+    .sport-games-table th,
+    .sport-games-table td {
+        padding: 12px 8px;
+    }
+    
+    .sport-header {
+        padding: 16px;
+    }
+    
+    .sport-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .btn-large {
+        width: 100%;
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .results-container {
+        gap: 20px;
+    }
+    
+    .sport-games-table th,
+    .sport-games-table td {
+        padding: 10px 6px;
+        font-size: 0.85rem;
+    }
+    
+    .sport-header {
+        padding: 12px;
+    }
+    
+    .sport-header h3 {
+        font-size: 1rem;
+    }
+    
+    .sport-icon-large {
+        font-size: 1.2rem;
+    }
+}
+
+/* Animazioni per i nuovi elementi */
+.sport-results {
+    animation: fadeIn 0.5s ease;
+}
+
+.sport-results:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.sport-results:nth-child(odd) {
+    animation-delay: 0.2s;
+}
+
+
+/* Fix per evitare il bianco quando si scrolla su mobile */
+html, body {
+    overflow-x: hidden;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
+}
+
+/* Assicura che il contenuto copra l'altezza necessaria senza spazio eccessivo */
+.container {
+    min-height: 100vh;
+    background: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Riduci lo spazio dopo la classifica principale */
+.leaderboard-container {
+    margin-bottom: 20px; /* Ridotto da default */
+}
+
+.main-content {
+    flex: 1;
+    padding-bottom: 20px; /* Ridotto padding bottom */
+}
+
+/* Miglioramenti responsive per la gestione admin */
+@media (max-width: 768px) {
+    .admin-section {
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .admin-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .admin-form input,
+    .admin-form select,
+    .admin-form button {
+        width: 100%;
+        min-height: 44px; /* Touch-friendly size */
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .admin-form button {
+        padding: 12px 20px;
+        margin-top: 10px;
+    }
+    
+    /* Miglioramenti per la sezione sport results */
+    .sport-results {
+        margin: 15px 0;
+    }
+    
+    .sport-header {
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .sport-header h3 {
+        font-size: 1.2rem;
+        margin: 10px 0 0 0;
+    }
+    
+    .sport-icon-large {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    
+    /* Responsive per le tabelle leaderboard */
+    .leaderboard-table {
+        font-size: 14px;
+    }
+    
+    .player-games {
+        gap: 8px;
+    }
+    
+    .game-score {
+        min-width: 35px;
+        height: 35px;
+        font-size: 13px;
+    }
+    
+    .player-name {
+        font-size: 14px;
+    }
+    
+    .total-score {
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+
+/* Fix per il viewport su dispositivi mobili */
+@media screen and (max-width: 768px) {
+    .viewport-meta {
+        content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+    }
+}
+
+/* Stili aggiuntivi per la sezione risultati sport */
+.sport-results {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    margin: 20px 0;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sport-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sport-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.sport-icon-large {
+    font-size: 2.5rem;
+    color: white;
+    opacity: 0.9;
+}
+
+/* Miglioramenti per la gestione admin mobile */
+.admin-panel {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .admin-panel {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .admin-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .admin-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .admin-form input,
+    .admin-form select {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 16px;
+    }
+    
+    .admin-form input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .admin-form button {
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .admin-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
