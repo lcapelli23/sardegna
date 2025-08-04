@@ -486,10 +486,7 @@ function setupRealtimeListeners() {
     scoresRef.on('value', (snapshot) => {
         const scoresData = snapshot.val() || {};
         // La struttura dei punteggi è leggermente diversa, la normalizziamo
-        scores = Object.keys(scoresData).map(playerId => ({
-            id: playerId,
-            ...scoresData[playerId]
-        }));
+        scores = scoresData;
         console.log('Listener: Punteggi aggiornati');
 
         updateAllUI();
@@ -549,7 +546,7 @@ function updateLeaderboard() {
     // Calcola totali per ogni giocatore
     const playerTotals = players.map(player => {
         // Trovo l'oggetto corrispondente al giocatore in scores (usando l'id)
-        const scoreObj = scores.find(score => score.id === player.id) || {};
+        const scoreObj = scores[player.id] || {};
         
         // Calcolo il totale sommando tutti i punti tranne la chiave "id"
         const total = Object.keys(scoreObj).reduce((sum, key) => {
@@ -641,7 +638,7 @@ function createPlayerRow(player, position) {
         gameScore.className = 'game-score';
     
         // Qui prendo i punti, controllando se esiste il gioco dentro player.scores
-        const scoreObj = scores.find(score => score.id === player.id) || {};
+        const scoreObj = scores[player.id] || {};
         const points = scoreObj[game.id]?.points || 0;
         gameScore.textContent = points;
     
@@ -716,7 +713,7 @@ function createGameCard(game, player) {
     
     const currentPoints = document.createElement('div');
     currentPoints.className = 'current-points';
-    const scoreObj = scores.find(score => score.id === player.id) || {};
+    const scoreObj = scores[player.id] || {};
     const points = scoreObj[game.id]?.points || 0;
     currentPoints.textContent = `${points} punti`;
     
