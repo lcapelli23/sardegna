@@ -933,11 +933,6 @@ async function addGame() {
         
         const newGameRef = await database.ref('games').push(gameData);
         
-        games.push({
-            id: newGameRef.key,
-            ...gameData
-        });
-        
         // Reset form
         gameNameInput.value = '';
         gameSportSelect.value = 'calcio';
