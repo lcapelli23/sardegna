@@ -726,7 +726,7 @@ function createGameLeaderboard(game) {
 
     // Colonna punteggio gara
     const gameHeader = document.createElement('div');
-    gameHeader.className = 'header-cell game';
+    gameHeader.className = 'header-cell total';
     gameHeader.textContent = 'Punteggio';
 
     tableHeader.appendChild(posHeader);
