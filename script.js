@@ -1068,12 +1068,6 @@ async function savePointsEdit() {
             updatedBy: currentUser.email
         });
         
-        // Aggiorna dati locali
-        if (!scores[editingPlayerId]) {
-            scores[editingPlayerId] = {};
-        }
-        scores[editingPlayerId][editingGameId] = newPoints;
-        
         // Update UI
         updateLeaderboard();
         updateResults();
