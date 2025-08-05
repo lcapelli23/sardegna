@@ -713,6 +713,7 @@ function createGameLeaderboard(game) {
     // Header della tabella
     const tableHeader = document.createElement('div');
     tableHeader.className = 'table-header';
+    tableHeader.style.gridTemplateColumns = '60px minmax(200px, 1fr) 120px';
 
     // Colonna posizione
     const posHeader = document.createElement('div');
@@ -783,7 +784,7 @@ function createGameLeaderboard(game) {
 function createGamePlayerRow(player, position, game) {
     const row = document.createElement('div');
     row.className = 'player-row';
-    row.style.gridTemplateColumns = '60px minmax(200px, 1fr) 100px'; // Rimuovo colonna totale
+    row.style.gridTemplateColumns = '60px minmax(200px, 1fr) 120px';
 
     // Posizione
     const positionCell = document.createElement('div');
