@@ -484,12 +484,8 @@ function setupRealtimeListeners() {
     // --- Listener per i PUNTEGGI ---
     const scoresRef = database.ref('scores');
     scoresRef.on('value', (snapshot) => {
-        const scoresData = snapshot.val() || {};
-        // La struttura dei punteggi è leggermente diversa, la normalizziamo
-        scores = Object.keys(scoresData).map(playerId => ({
-            id: playerId,
-            ...scoresData[playerId]
-        }));
+	const scoresData = snapshot.val() || {};
+    	scores = scoresData;
         console.log('Listener: Punteggi aggiornati');
 
         updateAllUI();
@@ -746,7 +742,7 @@ function createGameLeaderboard(game) {
 
     // Calcola punteggi per ogni giocatore per questa gara
     const playerGameScores = players.map(player => {
-        const scoreObj = scores.find(score => score.id === player.id) || {};
+	const scoreObj = scores[player.id] || {};
 
         // Punteggio per questa gara specifica
         const gameScore = scoreObj[game.id]?.points || 0;
