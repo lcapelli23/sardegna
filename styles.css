@@ -467,7 +467,7 @@ body {
 .table-header {
     display: grid;
     /* Colonne: Posizione, Giocatore (flessibile), Gare (contenuto dinamico), Totale */
-    grid-template-columns: 60px minmax(200px, 1fr) auto 100px;
+    grid-template-columns: 60px minmax(200px, 1fr) auto 120px;
     background: linear-gradient(135deg, var(--primary-color), #3b82f6);
     color: white;
     font-weight: 600;
@@ -517,7 +517,7 @@ body {
 /* 7. Layout a griglia per le righe dei giocatori, speculare all'header */
 .player-row {
     display: grid;
-    grid-template-columns: 60px minmax(200px, 1fr) auto 100px;
+    grid-template-columns: 60px minmax(200px, 1fr) auto 120px;
     border-bottom: 1px solid var(--border-color);
     transition: var(--transition);
 }
