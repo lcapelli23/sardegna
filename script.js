@@ -713,7 +713,6 @@ function createGameLeaderboard(game) {
     // Header della tabella
     const tableHeader = document.createElement('div');
     tableHeader.className = 'table-header';
-    tableHeader.style.gridTemplateColumns = '60px minmax(200px, 1fr) 100px'; // Rimuovo colonna totale
 
     // Colonna posizione
     const posHeader = document.createElement('div');
