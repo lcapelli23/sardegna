@@ -112,12 +112,14 @@ function initializeApp() {
     } else {
         // Listener per stato autenticazione
         auth.onAuthStateChanged(user => {
-	    console.log("ECCOMI");
+	    console.log(user);
             if (user) {
+		console.log("1");
                 currentUser = user;
                 checkGameMasterStatus();
                 setupRealtimeListeners(); 
             } else {
+		console.log("2");
                 currentUser = null;
                 isGameMaster = false;
                 showLoginScreen();
