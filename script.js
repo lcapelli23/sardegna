@@ -115,7 +115,8 @@ function initializeApp() {
             if (user) {
                 currentUser = user;
                 checkGameMasterStatus();
-                showMainScreen();
+		console.log("ECCOMI");
+		showMainScreen();
                 setupRealtimeListeners(); 
             } else {
                 currentUser = null;
