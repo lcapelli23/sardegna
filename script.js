@@ -113,6 +113,7 @@ function initializeApp() {
         // Listener per stato autenticazione
         auth.onAuthStateChanged(user => {
             if (user) {
+		console.log("ECCOMI");
                 currentUser = user;
                 checkGameMasterStatus();
                 setupRealtimeListeners(); 
@@ -471,9 +472,7 @@ function setupRealtimeListeners() {
             id: key,
             ...playersData[key]
         }));
-
-        // Assicurati che il giocatore corrente esista nel database
-        ensurePlayerExists();
+	    
         updateAllUI();
     }, (error) => {
         console.error('Errore nel listener dei giocatori:', error);
@@ -1099,17 +1098,6 @@ async function addNewPlayerToDatabase(userId, name, email) {
     } catch (error) {
         console.error('Errore nella creazione del player nel database:', error);
     }
-}
-
-async function ensurePlayerExists() {
-    if (DEMO_MODE) return;
-    
-    if (!currentUser) return;
-    
-    const existingPlayer = players.find(p => p.email === currentUser.email);
-    if (existingPlayer) return;
-    
-    console.error('Errore creazione giocatore:', error);
 }
 
 function getSportIcon(sport) {
