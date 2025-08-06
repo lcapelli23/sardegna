@@ -316,11 +316,13 @@ async function registerWithEmail() {
             await user.updateProfile({
                 displayName: name
             });
+	    console.log(user.displayName);
 
             // 3. (Opzionale ma consigliato) Ricarica l'oggetto utente per essere sicuro al 100%
             // che l'oggetto locale `currentUser` sia sincronizzato.
             await user.reload();
             currentUser = auth.currentUser; // Riassegna l'utente corrente aggiornato
+	    console.log(currentUser.displayName);
 
             // 4. Aggiungi il giocatore al tuo database Realtime
             // Questa funzione ora può usare `currentUser.displayName` con la certezza che sia corretto.
@@ -408,6 +410,7 @@ function showMainScreen() {
     document.body.style.overflow = 'auto';
     
     // Update user info
+    console.log(currentUser);
     const displayName = currentUser.displayName || currentUser.email.split('@')[0];
     userName.textContent = displayName;
     
