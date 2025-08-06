@@ -115,7 +115,7 @@ function initializeApp() {
             if (user) {
                 currentUser = user;
                 checkGameMasterStatus();
-		console.log("ECCOMI");
+		console.log("PROVA3");
 		showMainScreen();
                 setupRealtimeListeners(); 
             } else {
@@ -217,6 +217,7 @@ async function signInWithEmail() {
                 };
                 
                 checkGameMasterStatus();
+		console.log("PROVA1");
                 showMainScreen();
                 setupRealtimeListeners(); 
                 
@@ -295,7 +296,8 @@ async function registerWithEmail() {
                 };
                 
                 checkGameMasterStatus();
-                showMainScreen();
+		console.log("PROVA2");
+		showMainScreen();
                 loadDemoData();
                 
                 // Reset form
