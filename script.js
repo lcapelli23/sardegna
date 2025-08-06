@@ -115,8 +115,6 @@ function initializeApp() {
             if (user) {
                 currentUser = user;
                 checkGameMasterStatus();
-		console.log("PROVA3");
-		showMainScreen();
                 setupRealtimeListeners(); 
             } else {
                 currentUser = null;
