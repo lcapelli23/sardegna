@@ -454,7 +454,6 @@ function setupRealtimeListeners() {
             id: key,
             ...gamesData[key]
         }));
-        console.log('Listener: Giochi aggiornati', games.length);
 
         // Dopo aver ricevuto i dati, aggiorna tutte le parti dell'interfaccia
         updateAllUI();
@@ -471,7 +470,6 @@ function setupRealtimeListeners() {
             id: key,
             ...playersData[key]
         }));
-        console.log('Listener: Giocatori aggiornati', players.length);
 
         // Assicurati che il giocatore corrente esista nel database
         ensurePlayerExists();
@@ -486,7 +484,6 @@ function setupRealtimeListeners() {
     scoresRef.on('value', (snapshot) => {
 	const scoresData = snapshot.val() || {};
     	scores = scoresData;
-        console.log('Listener: Punteggi aggiornati');
 
         updateAllUI();
     }, (error) => {
@@ -1084,7 +1081,6 @@ async function savePointsEdit() {
 
 // Ensure Player Exists
 async function addNewPlayerToDatabase(userId, name, email) {
-    console.log("Aggiunta nuovo giocatore al database...");
     try {
         const playerData = {
             name: name,
@@ -1105,7 +1101,6 @@ async function addNewPlayerToDatabase(userId, name, email) {
 }
 
 async function ensurePlayerExists() {
-    console.log("ENSURE");
     if (DEMO_MODE) return;
     
     if (!currentUser) return;
