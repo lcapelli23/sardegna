@@ -1,6 +1,6 @@
 // Configurazione Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E",
+  apiKey: "AIzaSyCsXQofrgME-4DLLysQy6Jzz1DPJy6vz3E", // Sostituisci con la tua chiave API se necessario
   authDomain: "tabellone-punteggi.firebaseapp.com",
   databaseURL: "https://tabellone-punteggi-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "tabellone-punteggi",
@@ -9,7 +9,7 @@ const firebaseConfig = {
   appId: "1:116153541822:web:a0ac664310378aff7beaef",
 };
 
-// Modalità demo per test
+// Modalità demo per test senza Firebase configurato
 const DEMO_MODE = firebaseConfig.apiKey.startsWith("your-api-key" );
 
 // Inizializzazione Firebase
@@ -25,7 +25,7 @@ let isGameMaster = false;
 let games = [];
 let players = [];
 let scores = {};
-const GAME_MASTER_EMAIL = "lollocapelli@gmail.com";
+const GAME_MASTER_EMAIL = "lollocapelli@gmail.com"; // Email dell'amministratore
 
 // Elementi DOM
 const loginScreen = document.getElementById('loginScreen');
@@ -109,17 +109,15 @@ function setupEventListeners() {
     editPointsModal.addEventListener('click', (e) => { if (e.target === editPointsModal) closeEditModal(); });
 }
 
-// Gestione UI (Stabile)
+// Gestione UI
 function showLoginScreen() {
     mainScreen.classList.remove('active');
     loginScreen.classList.add('active');
-    document.body.style.overflow = 'hidden';
 }
 
 function showMainScreen() {
     loginScreen.classList.remove('active');
     mainScreen.classList.add('active');
-    document.body.style.overflow = 'auto';
     updateUserInfo();
 }
 
@@ -189,4 +187,182 @@ function setupRealtimeListeners() {
 
     refs.games = gamesRef.on('value', snapshot => { games = formatSnapshot(snapshot); updateAllUI(); });
     refs.players = playersRef.on('value', snapshot => { players = formatSnapshot(snapshot); updateAllUI(); });
-    refs.scores = scoresRef.on('value', snapshot => { scores = snapshot.val
+    refs.scores = scoresRef.on('value', snapshot => { scores = snapshot.val() || {}; updateAllUI(); });
+}
+
+function detachRealtimeListeners() {
+    if (refs.games) database.ref('games').off('value', refs.games);
+    if (refs.players) database.ref('players').off('value', refs.players);
+    if (refs.scores) database.ref('scores').off('value', refs.scores);
+    Object.keys(refs).forEach(key => refs[key] = null);
+}
+
+function formatSnapshot(snapshot) {
+    const data = snapshot.val() || {};
+    return Object.keys(data).map(key => ({ id: key, ...data[key] }));
+}
+
+function updateAllUI() {
+    if (!currentUser) return;
+    updateLeaderboard();
+    updateResults();
+    if (isGameMaster) updateAdminPanel();
+    updateStats();
+}
+
+// UI Rendering
+function switchTab(tabName) {
+    navTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName));
+    tabContents.forEach(content => content.classList.toggle('active', content.id === `${tabName}Tab`));
+}
+
+function updateLeaderboard() {
+    const playerTotals = players.map(player => {
+        const playerScore = scores[player.id] || {};
+        const total = Object.values(playerScore).reduce((sum, game) => sum + (game.points || 0), 0);
+        return { ...player, total };
+    }).sort((a, b) => b.total - a.total);
+
+    gamesHeader.innerHTML = games.map(game => `<div class="game-column" title="${game.name}">${game.name}</div>`).join('');
+    leaderboardBody.innerHTML = playerTotals.map((player, index) => createPlayerRow(player, index + 1)).join('');
+}
+
+function createPlayerRow(player, position) {
+    const playerScores = scores[player.id] || {};
+    const gamesHtml = games.map(game => {
+        const score = playerScores[game.id]?.points || 0;
+        const editableClass = isGameMaster ? 'editable' : '';
+        return `<div class="game-score ${editableClass}" onclick="isGameMaster && openEditModal('${game.id}', '${player.id}', ${score}, '${game.name}', '${player.name}')">${score}</div>`;
+    }).join('');
+
+    return `
+        <div class="player-row">
+            <div class="player-cell"><div class="position-badge position-${position <= 3 ? position : 'other'}">${position}</div></div>
+            <div class="player-cell player-info">
+                <div class="player-avatar">${getInitials(player.name)}</div>
+                <span class="player-name">${player.name}</span>
+            </div>
+            <div class="player-games">${gamesHtml}</div>
+            <div class="player-cell"><span class="total-score">${player.total}</span></div>
+        </div>`;
+}
+
+function updateResults() {
+    resultsContainer.innerHTML = games.map(game => {
+        const gameScores = players.map(player => ({
+            name: player.name,
+            score: scores[player.id]?.[game.id]?.points || 0
+        })).sort((a, b) => b.score - a.score);
+
+        return `
+            <div class="sport-results">
+                <div class="sport-header"><h3>${game.name}</h3></div>
+                <div class="leaderboard-table">
+                    ${gameScores.map((player, index) => `
+                        <div class="player-row" style="grid-template-columns: 50px 1fr 100px;">
+                            <div class="player-cell"><div class="position-badge position-${index + 1 <= 3 ? index + 1 : 'other'}">${index + 1}</div></div>
+                            <div class="player-cell player-info">${player.name}</div>
+                            <div class="player-cell"><span class="total-score">${player.score}</span></div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function updateAdminPanel() {
+    adminGamesList.innerHTML = games.map(game => `
+        <div class="admin-game-item">
+            <span>${game.name} (${getSportName(game.sport)})</span>
+            <button class="btn-danger" onclick="deleteGame('${game.id}')">Elimina</button>
+        </div>
+    `).join('');
+}
+
+function updateStats() {
+    totalGames.textContent = games.length;
+    totalPlayers.textContent = players.length;
+}
+
+// Funzioni Admin
+async function addGame() {
+    if (!gameNameInput.value) return alert('Inserisci il nome della gara.');
+    showLoading();
+    try {
+        await database.ref('games').push({
+            name: gameNameInput.value.trim(),
+            sport: gameSportSelect.value,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+        gameNameInput.value = '';
+    } catch (error) {
+        alert('Errore: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+
+async function deleteGame(gameId) {
+    if (!confirm('Sei sicuro? Verranno eliminati anche tutti i punteggi associati.')) return;
+    showLoading();
+    try {
+        const updates = { [`/games/${gameId}`]: null };
+        Object.keys(scores).forEach(playerId => {
+            if (scores[playerId][gameId]) {
+                updates[`/scores/${playerId}/${gameId}`] = null;
+            }
+        });
+        await database.ref().update(updates);
+    } catch (error) {
+        alert('Errore: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+
+// Gestione Punti
+function openEditModal(gameId, playerId, currentPoints, gameName, playerName) {
+    editingGameId = gameId;
+    editingPlayerId = playerId;
+    editingPlayerName = playerName;
+    modalTitle.textContent = `Modifica punti per ${playerName} in ${gameName}`;
+    pointsInput.value = currentPoints;
+    editPointsModal.classList.add('active');
+}
+
+function closeEditModal() {
+    editPointsModal.classList.remove('active');
+}
+
+async function savePointsEdit() {
+    const newPoints = parseInt(pointsInput.value, 10);
+    if (isNaN(newPoints)) return alert('Inserisci un valore numerico.');
+    showLoading();
+    try {
+        await database.ref(`scores/${editingPlayerId}/${editingGameId}`).set({
+            points: newPoints,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+        closeEditModal();
+    } catch (error) {
+        alert('Errore: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+
+// Utility
+async function addNewPlayerToDatabase(userId, name, email) {
+    await database.ref('players/' + userId).set({ name, email, joinedAt: firebase.database.ServerValue.TIMESTAMP });
+}
+
+function getInitials(name = '') {
+    const words = name.trim().split(/\s+/);
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + (words[words.length - 1][0] || '')).toUpperCase();
+}
+
+function getSportName(sport) {
+    const names = { 'calcio': 'Calcio', 'badminton': 'Badminton', 'freccette': 'Freccette', 'ping-pong': 'Ping Pong', 'tiro-arco': 'Tiro con l\'Arco' };
+    return names[sport] || sport;
+}
