@@ -94,6 +94,7 @@ const closeModal = document.getElementById('closeModal');
 // Variabili per editing
 let editingGameId = null;
 let editingPlayerId = null;
+let editingPlayerName = null;
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
@@ -637,7 +638,7 @@ function createPlayerRow(player, position) {
         const points = scoreObj[game.id]?.points || 0;
         gameScore.textContent = points;
     
-        // Permetti editing se sei game master o se è il tuo punteggio
+        // Permetti editing se sei game master
         if (isGameMaster) {
             gameScore.classList.add('editable');
             gameScore.addEventListener('click', () => openEditModal(game.id, player.id, points, game.name, player.name));
@@ -1016,6 +1017,7 @@ async function deleteGame(gameId) {
 function openEditModal(gameId, playerId, currentPoints, gameName, playerName) {
     editingGameId = gameId;
     editingPlayerId = playerId;
+	editingPlayerName = playerName;
     
     modalTitle.textContent = `${gameName} - ${playerName}`;
     pointsInput.value = currentPoints;
@@ -1028,6 +1030,7 @@ function closeEditModal() {
     editPointsModal.classList.remove('active');
     editingGameId = null;
     editingPlayerId = null;
+	editingPlayerName = null;
 }
 
 async function savePointsEdit() {
@@ -1062,6 +1065,7 @@ async function savePointsEdit() {
             points: newPoints,
             updatedAt: firebase.database.ServerValue.TIMESTAMP,
             updatedBy: currentUser.email
+			updatedTo: editingPlayerName
         });
         
         // Update UI
