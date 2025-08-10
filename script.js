@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Inizializzazione app
 function initializeApp() {
     showLoading();
+	console.log("7");
     
     if (DEMO_MODE) {
         // In modalità demo, simula l'autenticazione
@@ -112,14 +113,11 @@ function initializeApp() {
     } else {
         // Listener per stato autenticazione
         auth.onAuthStateChanged(user => {
-	    console.log(user);
             if (user) {
-		console.log("1");
                 currentUser = user;
                 checkGameMasterStatus();
                 setupRealtimeListeners(); 
             } else {
-		console.log("2");
                 currentUser = null;
                 isGameMaster = false;
                 showLoginScreen();
@@ -206,6 +204,7 @@ async function signInWithEmail() {
     
     try {
         showLoading();
+		console.log("1");
         
         if (DEMO_MODE) {
             // Modalità demo: simula l'autenticazione
@@ -285,6 +284,7 @@ async function registerWithEmail() {
     
     try {
         showLoading();
+		console.log("2");
         
         if (DEMO_MODE) {
             // Modalità demo: simula la registrazione
@@ -447,8 +447,9 @@ function setupRealtimeListeners() {
         loadDemoData();
         return;
     }
-
+	
     showLoading();
+	console.log("3");
 
     // --- Listener per i GIOCHI ---
     const gamesRef = database.ref('games');
@@ -922,6 +923,7 @@ async function addGame() {
     
     try {
         showLoading();
+		console.log("4");
         
         const gameData = {
             name: name,
@@ -974,6 +976,7 @@ async function deleteGame(gameId) {
     
     try {
         showLoading();
+		console.log("5");
         
         // Elimina la gara dal Realtime Database
         await database.ref('games').child(gameId).remove();
@@ -1059,6 +1062,7 @@ async function savePointsEdit() {
     
     try {
         showLoading();
+		console.log("6");
         
         // Salva nel Realtime Database
         await database.ref(`scores/${editingPlayerId}/${editingGameId}`).set({
