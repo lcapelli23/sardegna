@@ -1064,7 +1064,7 @@ async function savePointsEdit() {
         await database.ref(`scores/${editingPlayerId}/${editingGameId}`).set({
             points: newPoints,
             updatedAt: firebase.database.ServerValue.TIMESTAMP,
-            updatedBy: currentUser.email
+            updatedBy: currentUser.email,
 			updatedTo: editingPlayerName
         });
         
