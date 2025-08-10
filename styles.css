@@ -332,6 +332,7 @@ body {
     border: 2px solid var(--border-color);
     /* Proprietà chiave per centrare le iniziali */
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     /* Stile del testo */
