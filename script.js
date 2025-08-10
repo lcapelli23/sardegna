@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // Inizializzazione app
 function initializeApp() {
     showLoading();
-	console.log("7");
     
     if (DEMO_MODE) {
         // In modalità demo, simula l'autenticazione
@@ -204,7 +203,6 @@ async function signInWithEmail() {
     
     try {
         showLoading();
-		console.log("1");
         
         if (DEMO_MODE) {
             // Modalità demo: simula l'autenticazione
@@ -223,14 +221,13 @@ async function signInWithEmail() {
                 // Reset form
                 loginEmail.value = '';
                 loginPassword.value = '';
-                hideLoading();
             }, 1000);
         } else {
             await auth.signInWithEmailAndPassword(email, password);
             // Reset form
             loginEmail.value = '';
             loginPassword.value = '';
-	    showMainScreen()
+	    	showMainScreen()
         }
     } catch (error) {
         console.error('Errore login:', error);
@@ -252,8 +249,9 @@ async function signInWithEmail() {
                 message += 'Riprova.';
         }
         alert(message);
-        hideLoading();
     }
+	
+	hideLoading();
 }
 
 async function registerWithEmail() {
@@ -284,7 +282,6 @@ async function registerWithEmail() {
     
     try {
         showLoading();
-		console.log("2");
         
         if (DEMO_MODE) {
             // Modalità demo: simula la registrazione
@@ -297,7 +294,7 @@ async function registerWithEmail() {
                 };
                 
                 checkGameMasterStatus();
-		showMainScreen();
+				showMainScreen();
                 loadDemoData();
                 
                 // Reset form
@@ -343,7 +340,7 @@ async function registerWithEmail() {
             // Torna al tab login e nascondi il caricamento
             switchAuthTab('login');
             hideLoading(); // Nascondiamo qui perché il login non avviene in automatico
-	    showMainScreen();
+	    	showMainScreen();
         }
     } catch (error) {
         console.error('Errore registrazione:', error);
@@ -449,7 +446,6 @@ function setupRealtimeListeners() {
     }
 	
     showLoading();
-	console.log("3");
 
     // --- Listener per i GIOCHI ---
     const gamesRef = database.ref('games');
@@ -923,7 +919,6 @@ async function addGame() {
     
     try {
         showLoading();
-		console.log("4");
         
         const gameData = {
             name: name,
@@ -976,7 +971,6 @@ async function deleteGame(gameId) {
     
     try {
         showLoading();
-		console.log("5");
         
         // Elimina la gara dal Realtime Database
         await database.ref('games').child(gameId).remove();
@@ -1062,7 +1056,6 @@ async function savePointsEdit() {
     
     try {
         showLoading();
-		console.log("6");
         
         // Salva nel Realtime Database
         await database.ref(`scores/${editingPlayerId}/${editingGameId}`).set({
