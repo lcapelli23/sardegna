@@ -116,7 +116,8 @@ function initializeApp() {
             if (user) {
                 currentUser = user;
                 checkGameMasterStatus();
-                setupRealtimeListeners(); 
+                setupRealtimeListeners();
+				showMainScreen();
             } else {
                 currentUser = null;
                 isGameMaster = false;
