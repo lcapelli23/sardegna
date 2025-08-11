@@ -19,6 +19,11 @@ if (!DEMO_MODE) {
     firebase.initializeApp(firebaseConfig);
     var auth = firebase.auth();
     var database = firebase.database(); // Realtime Database invece di Firestore
+
+	// Forza persistenza locale
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => console.log('Auth persistence: LOCAL'))
+      .catch(err => console.warn('Errore impostando persistence:', err));
 } else {
     console.log("Modalità demo attiva - Firebase non configurato");
 }
@@ -117,7 +122,6 @@ function initializeApp() {
                 currentUser = user;
                 checkGameMasterStatus();
                 setupRealtimeListeners();
-				showMainScreen();
             } else {
                 currentUser = null;
                 isGameMaster = false;
